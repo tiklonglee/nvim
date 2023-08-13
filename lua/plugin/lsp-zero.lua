@@ -17,6 +17,9 @@ return {
 
         lsp_zero.on_attach(function(client, bufnr)
             lsp_zero.default_keymaps({ buffer = bufnr })
+            vim.keymap.set("n", "<leader>bf", vim.lsp.buf.format)
+            vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename)
+            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
         end)
 
         lsp_zero.setup()
