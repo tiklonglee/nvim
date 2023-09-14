@@ -4,10 +4,7 @@ return {
     dependencies = {
         -- LSP Support
         {'neovim/nvim-lspconfig'},             -- Required
-        {                                      -- Optional
-            'williamboman/mason.nvim',
-            build = ':MasonUpdate'
-        },
+        {'williamboman/mason.nvim'},           -- Optional
         {'williamboman/mason-lspconfig.nvim'}, -- Optional
 
         -- Autocompletion
