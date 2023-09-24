@@ -1,6 +1,6 @@
 return {
     'VonHeikemen/lsp-zero.nvim',
-    branch = 'v2.x',
+    branch = 'v3.x',
     dependencies = {
         -- LSP Support
         {'neovim/nvim-lspconfig'},             -- Required
@@ -13,7 +13,7 @@ return {
         {'L3MON4D3/LuaSnip'},     -- Required
     },
     config = function()
-        local lsp_zero = require('lsp-zero').preset({})
+        local lsp_zero = require('lsp-zero')
 
         lsp_zero.on_attach(function(client, bufnr)
             lsp_zero.default_keymaps({ buffer = bufnr })
@@ -22,7 +22,14 @@ return {
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action)
         end)
 
-        lsp_zero.setup()
+        require('mason').setup({})
+        require('mason-lspconfig').setup({
+            ensure_installed = {
+            },
+            handlers = {
+                lsp_zero.default_setup,
+            },
+        })
 
         local cmp = require('cmp')
         local cmp_action = require('lsp-zero').cmp_action()
