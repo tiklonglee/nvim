@@ -1,5 +1,5 @@
 return {
-    'nvim-telescope/telescope.nvim', tag = '0.1.2',
+    'nvim-telescope/telescope.nvim', tag = '0.1.6',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
         require('telescope').setup{
@@ -17,19 +17,45 @@ return {
             },
         }
 
+        local function is_git_repo()
+            vim.fn.system("git rev-parse --is-inside-work-tree")
+            return vim.v.shell_error == 0
+        end
+
+        local function find_git_root()
+            local dot_git_path = vim.fn.finddir(".git", ".;")
+            return vim.fn.fnamemodify(dot_git_path, ":h")
+        end
+
+        local function file_picker_opts()
+            local opts = {}
+            if is_git_repo() then
+                opts.cwd = find_git_root()
+            end
+            return opts
+        end
+
         local builtin = require('telescope.builtin')
         vim.keymap.set('n', '<C-p>',
             function()
-                vim.fn.system('git rev-parse --is-inside-work-tree')
-                if vim.v.shell_error == 0 then
-                    builtin.git_files()
-                else
-                    builtin.find_files()
-                end
+                local opts = file_picker_opts()
+                builtin.find_files(opts)
             end,
             { noremap = true }
         )
-        vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-        vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+        vim.keymap.set('n', '\\\\',
+            function()
+                local opts = file_picker_opts()
+                builtin.grep_string(opts)
+            end,
+            { noremap = true }
+        )
+        vim.keymap.set('n', '<leader>fg',
+            function()
+                local opts = file_picker_opts()
+                builtin.live_grep(opts)
+            end,
+            { noremap = true }
+        )
     end
 }
