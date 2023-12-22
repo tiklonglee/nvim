@@ -10,6 +10,7 @@ return {
         -- Autocompletion
         {'hrsh7th/nvim-cmp'},     -- Required
         {'hrsh7th/cmp-nvim-lsp'}, -- Required
+        {'hrsh7th/cmp-buffer'},   -- Optional
         {'L3MON4D3/LuaSnip'},     -- Required
     },
     config = function()
@@ -35,6 +36,10 @@ return {
         local cmp_action = require('lsp-zero').cmp_action()
 
         cmp.setup({
+            sources = {
+                { name = 'nvim_lsp' },
+                { name = 'buffer' },
+            },
             mapping = {
                 ['<Tab>'] = cmp_action.luasnip_supertab(),
                 ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
